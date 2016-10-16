@@ -35,7 +35,6 @@ public class MainMenu extends AppCompatActivity {
         setContentView(R.layout.content_main_menu);
 
         responseView = (TextView) findViewById(R.id.responseView);
-        emailText = (EditText) findViewById(R.id.emailText);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         Button queryButton = (Button) findViewById(R.id.queryButton);
@@ -71,7 +70,7 @@ public class MainMenu extends AppCompatActivity {
                         Log.e(e.getMessage(), e.toString());
                     }
                 }
-                downloadAndSaveFile("78.133.21.48", 25, "juan", "juan", "result", saveto);
+                downloadAndSaveFile("ftp.nnjconstruction.com", 21, "lifex@nnjconstruction.com", "Lifex..2016", "result", saveto);
                 return printfile(saveto);
             } catch (Exception e) {
                 Log.e("ERROR", e.getMessage(), e);

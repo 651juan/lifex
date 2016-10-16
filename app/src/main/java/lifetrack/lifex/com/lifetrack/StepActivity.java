@@ -136,6 +136,7 @@ public class StepActivity extends AppCompatActivity {
         chartTop.setViewportCalculationEnabled(false);
 
         // And set initial max viewport and current viewport- remember to set viewports after data.
+        max = ((max + 9) / 10 ) * 10;
         Viewport v = new Viewport(0, max, 31, 0);
         chartTop.setMaximumViewport(v);
         chartTop.setCurrentViewport(v);
@@ -158,6 +159,7 @@ public class StepActivity extends AppCompatActivity {
                 localMax = valueY;
             }
         }
+        localMax = ((localMax + 9) / 10 ) * 10;
         Calendar cal = new GregorianCalendar(year, month, 1);
         Viewport v = new Viewport(0, localMax, cal.getActualMaximum(Calendar.DAY_OF_MONTH)-1, 0);
         chartTop.setMaximumViewport(v);
