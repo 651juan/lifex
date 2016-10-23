@@ -3,6 +3,7 @@ package lifetrack.lifex.com.lifetrack;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TextView;
 import lecho.lib.hellocharts.gesture.ZoomType;
 import lecho.lib.hellocharts.listener.ColumnChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.*;
@@ -74,15 +75,17 @@ public class StepActivity extends AppCompatActivity {
 
         int numSubcolumns = 1;
         int numColumns = months.length;
+        int count = 0;
 
         List<AxisValue> axisValues = new ArrayList<>();
         List<Column> columns = new ArrayList<>();
         List<SubcolumnValue> values;
+        for (int x : monthDataCount) count += x;
         for (int i = 0; i < numColumns; ++i) {
 
             values = new ArrayList<>();
             for (int j = 0; j < numSubcolumns; ++j) {
-                values.add(new SubcolumnValue((float) monthDataCount[i], ChartUtils.pickColor()));
+                values.add(new SubcolumnValue(( ((float) monthDataCount[i] / count) * 100), ChartUtils.pickColor()));
             }
 
             axisValues.add(new AxisValue(i).setLabel(months[i]));
@@ -92,8 +95,8 @@ public class StepActivity extends AppCompatActivity {
 
         columnData = new ColumnChartData(columns);
 
-        columnData.setAxisXBottom(new Axis(axisValues).setHasLines(true));
-        columnData.setAxisYLeft(new Axis().setHasLines(true).setMaxLabelChars(2));
+        columnData.setAxisXBottom(new Axis(axisValues).setHasLines(true).setName("Month"));
+        columnData.setAxisYLeft(new Axis().setHasLines(true).setMaxLabelChars(2).setName("Faces Detected '%'"));
 
         chartBottom.setColumnChartData(columnData);
 
@@ -127,8 +130,8 @@ public class StepActivity extends AppCompatActivity {
         lines.add(line);
 
         lineData = new LineChartData(lines);
-        lineData.setAxisXBottom(new Axis(axisValues).setHasLines(true));
-        lineData.setAxisYLeft(new Axis().setHasLines(true).setMaxLabelChars(3));
+        lineData.setAxisXBottom(new Axis(axisValues).setHasLines(true).setName("Days of the Month"));
+        lineData.setAxisYLeft(new Axis().setHasLines(true).setMaxLabelChars(3).setName("Faces Detected"));
 
         chartTop.setLineChartData(lineData);
 
@@ -137,6 +140,7 @@ public class StepActivity extends AppCompatActivity {
 
         // And set initial max viewport and current viewport- remember to set viewports after data.
         max = ((max + 9) / 10 ) * 10;
+        max = Math.round(max);
         Viewport v = new Viewport(0, max, 31, 0);
         chartTop.setMaximumViewport(v);
         chartTop.setCurrentViewport(v);
@@ -147,6 +151,9 @@ public class StepActivity extends AppCompatActivity {
     private void generateMonthData(int color, int month) {
         // Cancel last animation if not finished.
         chartTop.cancelDataAnimation();
+
+        TextView monthText = (TextView) findViewById(R.id.monthValue);
+        monthText.setText(months[month]);
 
         Line line = lineData.getLines().get(0);// For this example there is always only one line.
         line.setColor(color);
@@ -159,7 +166,7 @@ public class StepActivity extends AppCompatActivity {
                 localMax = valueY;
             }
         }
-        localMax = ((localMax + 9) / 10 ) * 10;
+        localMax = Math.round(((localMax + 9) / 10 ) * 10);
         Calendar cal = new GregorianCalendar(year, month, 1);
         Viewport v = new Viewport(0, localMax, cal.getActualMaximum(Calendar.DAY_OF_MONTH)-1, 0);
         chartTop.setMaximumViewport(v);
@@ -183,6 +190,9 @@ public class StepActivity extends AppCompatActivity {
 
             // Cancel last animation if not finished.
             chartTop.cancelDataAnimation();
+
+            TextView monthText = (TextView) findViewById(R.id.monthValue);
+            monthText.setText("");
 
             // Modify data targets
             Line line = lineData.getLines().get(0);// For this example there is always only one line.
